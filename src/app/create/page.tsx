@@ -1,4 +1,6 @@
 "use client";
+import Header from "@/components/Header";
+import Created from "@/components/create/Created";
 import Tiptap from "@/components/ui/Tiptap";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,18 +14,18 @@ import {
 import { Input } from "@/components/ui/input";
 import useAddSubject from "@/hooks/useAddSubject";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 // import parse from "html-react-parser";
 
 const page = () => {
-  const { mutateAsync, isSuccess } = useAddSubject();
+  const { mutateAsync, isSuccess, data } = useAddSubject();
 
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     if (isSuccess) {
-      // todo: show modal with uniqueId of the subject
-      console.log("hi");
+      setOpen(true);
     }
   }, [isSuccess]);
 
@@ -52,11 +54,15 @@ const page = () => {
       id: "",
       createdAt: new Date(),
     });
+    form.reset();
   };
 
   return (
-    <main className="flex items-center justify-center py-10">
+    <main className="flex flex-col items-center justify-center space-y-5 py-10">
+      <Header />
+      <hr />
       <div className="w-fit">
+        <Created open={open} setOpen={setOpen} id={data?.id} />
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             {/* {form.getValues("description") &&
